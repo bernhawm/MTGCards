@@ -1,0 +1,123 @@
+-- Create the cards table
+CREATE TABLE IF NOT EXISTS cards_raw (
+    id UUID PRIMARY KEY,
+    data JSONB NOT NULL
+);
+
+
+
+-- -- Create main table
+-- CREATE TABLE IF NOT EXISTS cards_all (
+--     id UUID PRIMARY KEY,
+--     name TEXT,
+--     set_code TEXT,
+--     set_name TEXT,
+--     set_type TEXT,
+--     collector_number TEXT,
+--     cmc NUMERIC,
+--     mana_cost TEXT,
+--     type_line TEXT,
+--     rarity TEXT,
+--     frame TEXT,
+--     layout TEXT,
+--     foil BOOLEAN,
+--     nonfoil BOOLEAN,
+--     promo BOOLEAN,
+--     textless BOOLEAN,
+--     reprint BOOLEAN,
+--     oversized BOOLEAN,
+--     variation BOOLEAN,
+--     full_art BOOLEAN,
+--     reserved BOOLEAN,
+--     game_changer BOOLEAN,
+--     artist TEXT,
+--     artist_ids JSONB,
+--     colors JSONB,
+--     color_identity JSONB,
+--     produced_mana JSONB,
+--     oracle_id UUID,
+--     oracle_text TEXT,
+--     released_at DATE,
+--     mtgo_id INT,
+--     arena_id INT,
+--     tcgplayer_id INT,
+--     cardmarket_id INT,
+--     prices JSONB,
+--     legalities JSONB,
+--     image_uris JSONB,
+--     related_uris JSONB,
+--     purchase_uris JSONB,
+--     keywords JSONB,
+--     card_back_id UUID,
+--     image_status TEXT,
+--     border_color TEXT,
+--     games JSONB,
+--     finishes JSONB
+-- );
+
+-- -- Create staging table
+-- CREATE TEMP TABLE cards_raw (
+--     data JSONB
+-- );
+
+-- -- Load NDJSON into staging
+-- COPY cards_raw(data)
+-- FROM '/docker-entrypoint-initdb.d/cards.ndjson';
+
+-- -- Insert into main table, transforming fields as needed
+-- INSERT INTO cards_all (
+--     id, name, set_code, set_name, set_type, collector_number, cmc, mana_cost,
+--     type_line, rarity, frame, layout, foil, nonfoil, promo, textless, reprint,
+--     oversized, variation, full_art, reserved, game_changer, artist, artist_ids,
+--     colors, color_identity, produced_mana, oracle_id, oracle_text, released_at,
+--     mtgo_id, arena_id, tcgplayer_id, cardmarket_id, prices, legalities, image_uris,
+--     related_uris, purchase_uris, keywords, card_back_id, image_status, border_color,
+--     games, finishes
+-- )
+-- SELECT
+--     (data->>'id')::uuid,
+--     data->>'name',
+--     data->>'set',
+--     data->>'set_name',
+--     data->>'set_type',
+--     data->>'collector_number',
+--     NULLIF(data->>'cmc','')::numeric,
+--     data->>'mana_cost',
+--     data->>'type_line',
+--     data->>'rarity',
+--     data->>'frame',
+--     data->>'layout',
+--     (data->>'foil')::boolean,
+--     (data->>'nonfoil')::boolean,
+--     (data->>'promo')::boolean,
+--     (data->>'textless')::boolean,
+--     (data->>'reprint')::boolean,
+--     (data->>'oversized')::boolean,
+--     (data->>'variation')::boolean,
+--     (data->>'full_art')::boolean,
+--     (data->>'reserved')::boolean,
+--     (data->>'game_changer')::boolean,
+--     data->>'artist',
+--     data->'artist_ids',
+--     data->'colors',
+--     data->'color_identity',
+--     data->'produced_mana',
+--     (data->>'oracle_id')::uuid,
+--     data->>'oracle_text',
+--     (data->>'released_at')::date,
+--     NULLIF(data->>'mtgo_id','')::int,
+--     NULLIF(data->>'arena_id','')::int,
+--     NULLIF(data->>'tcgplayer_id','')::int,
+--     NULLIF(data->>'cardmarket_id','')::int,
+--     data->'prices',
+--     data->'legalities',
+--     data->'image_uris',
+--     data->'related_uris',
+--     data->'purchase_uris',
+--     data->'keywords',
+--     (data->>'card_back_id')::uuid,
+--     data->>'image_status',
+--     data->>'border_color',
+--     data->'games',
+--     data->'finishes'
+-- FROM cards_raw;
