@@ -23,24 +23,22 @@ if os.path.exists(cards_json_path):
     with open(cards_json_path, "r", encoding="utf-8") as f:
         local_cards = json.load(f)
 else:
+    print("cards.json not found, creating a new one...")
     local_cards = []
 
 # 4. Build a set of existing card IDs for quick lookup
 existing_ids = {card.get("id") for card in local_cards}
 
 # 5. Compare and append new cards
-new_cards = []
-for card in scryfall_cards:
-    if card.get("id") not in existing_ids:
-        new_cards.append(card)
+new_cards = [card for card in scryfall_cards if card.get("id") not in existing_ids]
 
 if new_cards:
     print(f"Adding {len(new_cards)} new cards to cards.json...")
     local_cards.extend(new_cards)
-
-    with open(cards_json_path, "w", encoding="utf-8") as f:
-        json.dump(local_cards, f, indent=2)
 else:
     print("No new cards to add.")
+# 6. Write the updated cards.json (or create it if missing)
+with open(cards_json_path, "w", encoding="utf-8") as f:
+    json.dump(local_cards, f, indent=2)
 
 print("Sync complete.")
