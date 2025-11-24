@@ -30,7 +30,7 @@ with open(ndjson_path, "r", encoding="utf-8") as f:
         id = obj.get("id")
         cur.execute(
             "INSERT INTO cards_raw (id, data) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-            (id, json.dumps(obj))
+            (id, json.dumps(obj)),
         )
 
 conn.commit()

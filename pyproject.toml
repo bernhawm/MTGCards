@@ -1,0 +1,8 @@
+[tool.ruff]
+# Specify the directories to lint
+src = ["."]
+# Select rulesets or ignore rules
+select = ["E", "F", "W"]  # Example: basic pyflakes + pycodestyle
+ignore = ["E501"]         # Ignore line length
+# Optionally: max line length
+line-length = 88

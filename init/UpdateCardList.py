@@ -37,7 +37,7 @@ for card in scryfall_cards:
 if new_cards:
     print(f"Adding {len(new_cards)} new cards to cards.json...")
     local_cards.extend(new_cards)
-    
+
     with open(cards_json_path, "w", encoding="utf-8") as f:
         json.dump(local_cards, f, indent=2)
 else:
